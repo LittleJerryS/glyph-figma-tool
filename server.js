@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const sharp = require('sharp');
 const OpenAI = require('openai');
+const axios = require('axios');
 require('dotenv').config();
 
 const app = express();
@@ -90,6 +91,38 @@ app.get('/api/design-tokens', (req, res) => {
 // Get all AI designs
 app.get('/api/ai-designs', (req, res) => {
   res.json(designSystem.aiDesigns);
+});
+
+// Scan Figma design file
+app.post('/api/scan-figma', async (req, res) => {
+  try {
+    const { figmaFileId, nodeId } = req.body;
+    
+    if (!figmaFileId) {
+      return res.status(400).json({ error: 'Figma file ID is required' });
+    }
+
+    // Get Figma file data
+    const figmaData = await getFigmaFile(figmaFileId, nodeId);
+    
+    // Extract components and design tokens
+    const components = extractFigmaComponents(figmaData);
+    const designTokens = extractFigmaDesignTokens(figmaData);
+    
+    // Update design system
+    designSystem.components = components;
+    designSystem.designTokens = designTokens;
+
+    res.json({
+      message: 'Figma designs scanned successfully',
+      components: components,
+      designTokens: designTokens
+    });
+
+  } catch (error) {
+    console.error('Figma scan error:', error);
+    res.status(500).json({ error: 'Figma scan failed' });
+  }
 });
 
 // Upload files
@@ -461,6 +494,112 @@ Format the response as a structured JSON object.`;
       context: context
     };
   }
+}
+
+// Figma API helper functions
+async function getFigmaFile(fileId, nodeId = null) {
+  try {
+    const figmaToken = process.env.FIGMA_ACCESS_TOKEN;
+    if (!figmaToken) {
+      throw new Error('FIGMA_ACCESS_TOKEN not found in environment variables');
+    }
+
+    let url = `https://api.figma.com/v1/files/${fileId}`;
+    if (nodeId) {
+      url += `/nodes?ids=${nodeId}`;
+    }
+
+    const response = await axios.get(url, {
+      headers: {
+        'X-Figma-Token': figmaToken
+      }
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Figma API error:', error);
+    throw new Error('Failed to fetch Figma file data');
+  }
+}
+
+function extractFigmaComponents(figmaData) {
+  const components = [];
+  
+  try {
+    // Extract components from Figma data
+    if (figmaData.nodes) {
+      Object.values(figmaData.nodes).forEach(node => {
+        if (node.document) {
+          extractComponentsFromNode(node.document, components);
+        }
+      });
+    } else if (figmaData.document) {
+      extractComponentsFromNode(figmaData.document, components);
+    }
+  } catch (error) {
+    console.error('Error extracting components:', error);
+  }
+  
+  return components;
+}
+
+function extractComponentsFromNode(node, components) {
+  if (node.type === 'COMPONENT' || node.type === 'COMPONENT_SET') {
+    components.push({
+      id: node.id,
+      name: node.name,
+      type: node.type,
+      source: 'figma',
+      status: 'extracted',
+      properties: {
+        width: node.absoluteBoundingBox?.width,
+        height: node.absoluteBoundingBox?.height,
+        fills: node.fills,
+        strokes: node.strokes,
+        effects: node.effects
+      }
+    });
+  }
+  
+  // Recursively check children
+  if (node.children) {
+    node.children.forEach(child => {
+      extractComponentsFromNode(child, components);
+    });
+  }
+}
+
+function extractFigmaDesignTokens(figmaData) {
+  const tokens = [];
+  
+  try {
+    // Extract design tokens from Figma data
+    if (figmaData.styles) {
+      Object.values(figmaData.styles).forEach(style => {
+        if (style.styleType === 'FILL') {
+          tokens.push({
+            name: style.name,
+            type: 'color',
+            value: style.description || 'Figma color style',
+            source: 'figma',
+            figmaId: style.key
+          });
+        } else if (style.styleType === 'TEXT') {
+          tokens.push({
+            name: style.name,
+            type: 'typography',
+            value: style.description || 'Figma text style',
+            source: 'figma',
+            figmaId: style.key
+          });
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error extracting design tokens:', error);
+  }
+  
+  return tokens;
 }
 
 // Serve the main application

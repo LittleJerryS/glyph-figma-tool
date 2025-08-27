@@ -79,8 +79,11 @@ npm run dev
 Create a `.env` file in the root directory:
 
 ```env
-# OpenAI API Key (optional)
-OPENAI_API_KEY=your-api-key-here
+# Figma API Access Token (required)
+FIGMA_ACCESS_TOKEN=your-figma-access-token-here
+
+# OpenAI API Key (optional, for AI features)
+OPENAI_API_KEY=your-openai-api-key-here
 
 # Server port
 PORT=3000
@@ -89,19 +92,23 @@ PORT=3000
 NODE_ENV=development
 ```
 
+### Getting Your Figma Access Token
+1. Go to [Figma Account Settings](https://www.figma.com/settings)
+2. Navigate to "Personal access tokens"
+3. Click "Generate new token"
+4. Copy the token and add it to your `.env` file
+
 ### API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/api/status` | Get system status and counts |
-| `GET` | `/api/files` | Get all uploaded files |
-| `GET` | `/api/components` | Get generated components |
-| `GET` | `/api/design-tokens` | Get design tokens |
+| `GET` | `/api/components` | Get extracted Figma components |
+| `GET` | `/api/design-tokens` | Get extracted design tokens |
 | `GET` | `/api/ai-designs` | Get AI-generated designs |
-| `POST` | `/api/upload` | Upload design files |
-| `POST` | `/api/scan-existing` | Scan project directories |
-| `POST` | `/api/generate-ui-library` | Generate UI library |
-| `POST` | `/api/generate-ai-design` | Generate AI design |
+| `POST` | `/api/scan-figma` | Scan Figma design file |
+| `POST` | `/api/generate-ui-library` | Generate UI library from Figma components |
+| `POST` | `/api/generate-ai-design` | Generate AI design using Figma context |
 
 ## 📁 Project Structure
 
@@ -124,24 +131,25 @@ glyph-figma-tool/
 - Run `start-app.bat` or follow manual setup
 - Open http://localhost:3000 in your browser
 
-### 2. **Import Design Files**
-- **Drag & Drop**: Drop files onto the upload area
-- **File Browser**: Click upload area to browse files
-- **Supported Formats**: PNG, JPG, SVG, Figma, Sketch, AI, PSD
+### 2. **Configure Figma Access**
+- Get your Figma access token from [Figma Account Settings](https://www.figma.com/settings)
+- Add `FIGMA_ACCESS_TOKEN=your-token` to your `.env` file
 
-### 3. **Scan Existing Projects**
-- Click "Scan Existing Files" to find design files in your project directories
-- Automatically detects: Redwith/, OTB/, frontend-backup/, mobile-app-backup/
+### 3. **Scan Figma Designs**
+- Click "Scan Figma Designs" to connect to your Figma file
+- Automatically extracts components, styles, and design tokens
+- Uses your existing Figma file: [Propkit-UI--WIP-](https://www.figma.com/design/1B6YOHSRMa6hcZ1rWLcMOJ/Propkit-UI--WIP-?node-id=8705-470&t=mw67rwRUJYco4Rkx-1)
 
 ### 4. **Generate UI Library**
-- Click "Generate UI Library" to analyze uploaded files
-- Extract components and design tokens
-- View progress in real-time
+- Click "Generate UI Library" to organize extracted components
+- Creates consistent design system from your Figma components
+- View progress and component details in real-time
 
 ### 5. **AI Design Generation**
 - Enter a design description in the AI prompt area
 - Click "Generate AI Design" to create new designs
-- AI uses your existing design system as reference
+- AI uses your existing Figma design system as reference
+- Press `Ctrl+Enter` for quick generation
 
 ## 🔍 File Analysis Features
 
