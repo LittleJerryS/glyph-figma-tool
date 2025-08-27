@@ -160,12 +160,20 @@ class GlyphDesignSystem {
     }
   }
 
-  private async fetchAPI(endpoint: string) {
-    const response = await fetch(`${this.apiBase}${endpoint}`);
-    if (!response.ok) {
-      throw new Error(`API call failed: ${response.statusText}`);
+  private async fetchAPI(endpoint: string, options?: RequestInit) {
+    try {
+      const response = await fetch(`${this.apiBase}${endpoint}`, options);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: response.statusText }));
+        throw new Error(errorData.error || `API request failed: ${response.statusText}`);
+      }
+      return response.json();
+    } catch (error) {
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error('Cannot connect to server. Please ensure the development server is running.');
+      }
+      throw error;
     }
-    return response.json();
   }
 
   private updateStatusDisplay(status: any) {
