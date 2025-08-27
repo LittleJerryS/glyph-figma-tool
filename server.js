@@ -73,14 +73,24 @@ let designSystem = {
 
 // Routes
 
-// Get design system status
+// Get design system status with enhanced info
 app.get('/api/status', (req, res) => {
-  res.json({
-    files: designSystem.files.length,
-    components: designSystem.components.length,
-    designTokens: designSystem.designTokens.length,
-    aiDesigns: designSystem.aiDesigns.length
-  });
+  try {
+    res.json({
+      files: designSystem.files.length,
+      components: designSystem.components.length,
+      designTokens: designSystem.designTokens.length,
+      aiDesigns: designSystem.aiDesigns.length,
+      services: {
+        openai: openai !== null,
+        figma: !!process.env.FIGMA_ACCESS_TOKEN && process.env.FIGMA_ACCESS_TOKEN !== 'your-figma-access-token-here'
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Status endpoint error:', error);
+    res.status(500).json({ error: 'Failed to get status' });
+  }
 });
 
 // Get all files
