@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glyph Design System - AI-Powered UI Library Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            color: #e0e0e0;
+        }
+
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .workflow-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .workflow-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .workflow-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .workflow-card p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #d0d0d0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 8px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn.secondary:hover {
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn.success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn.success:hover {
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn.danger {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn.danger:hover {
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        .ai-prompt-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .ai-prompt-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .prompt-input {
+            width: 100%;
+            padding: 20px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .prompt-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .prompt-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .file-upload-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .file-upload-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .upload-area {
+            border: 3px dashed rgba(102, 126, 234, 0.5);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.3);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #d0d0d0;
+            margin-bottom: 15px;
+        }
+
+        .upload-hint {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+        }
+
+        .status-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .status-panel h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .status-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .status-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .status-label {
+            color: #d0d0d0;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .log-output {
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 5px 0;
+        }
+
+        .log-entry.info { color: #17a2b8; }
+        .log-entry.success { color: #28a745; }
+        .log-entry.warning { color: #ffc107; }
+        .log-entry.error { color: #dc3545; }
+        .log-entry.command { color: #ffd700; }
+
+        .file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .file-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .file-meta {
+            font-size: 0.8rem;
+            color: #a0a0a0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .workflow-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎨 Glyph Design System</h1>
+            <p>AI-Powered UI Library Generator & Design System Builder</p>
+        </div>
+
+        <!-- Main Workflow -->
+        <div class="workflow-grid">
+            <!-- Phase 1: Import & Organize -->
+            <div class="workflow-card">
+                <h2>📥 Phase 1: Import & Organize</h2>
+                <p>Import your scattered design files, screenshots, and existing designs from various sources to build a comprehensive design foundation.</p>
+                <button class="btn success" onclick="startImport()">Start Import Process</button>
+                <button class="btn secondary" onclick="scanExistingFiles()">Scan Existing Files</button>
+            </div>
+
+            <!-- Phase 2: Generate UI Library -->
+            <div class="workflow-card">
+                <h2>🏗️ Phase 2: Generate UI Library</h2>
+                <p>Transform your imported designs into a professional, organized Figma UI library with consistent components, styles, and design tokens.</p>
+                <button class="btn" onclick="generateUILibrary()">Generate UI Library</button>
+                <button class="btn secondary" onclick="previewLibrary()">Preview Library</button>
+            </div>
+        </div>
+
+        <!-- AI Design Generation -->
+        <div class="ai-prompt-section">
+            <h2>🤖 AI Design Generation</h2>
+            <p>Use text prompts to generate new designs based on your existing design system and imported references.</p>
+            <textarea 
+                class="prompt-input" 
+                placeholder="Describe the design you want to create... (e.g., 'Create a modern login form with rounded corners, using our brand colors and following our button style guidelines')"
+                id="ai-prompt"
+                rows="4"
+            ></textarea>
+            <button class="btn success" onclick="generateAIDesign()">Generate AI Design</button>
+            <button class="btn secondary" onclick="previewPrompt()">Preview Prompt</button>
+        </div>
+
+        <!-- File Upload & Management -->
+        <div class="file-upload-section">
+            <h2>📁 File Import & Management</h2>
+            <p>Drag and drop or select files to import into your design system foundation.</p>
+            
+            <div class="upload-area" id="upload-area" onclick="triggerFileInput()">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">Drop files here or click to browse</div>
+                <div class="upload-hint">Supports: Figma files, images, screenshots, design files</div>
+            </div>
+            
+            <input type="file" id="file-input" multiple accept=".fig,.png,.jpg,.jpeg,.svg,.sketch,.ai,.psd" style="display: none;">
+            
+            <div class="file-list" id="file-list">
+                <!-- Files will be listed here -->
+            </div>
+        </div>
+
+        <!-- Status & Progress -->
+        <div class="status-panel">
+            <h2>📊 Status & Progress</h2>
+            
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-value" id="files-imported">0</div>
+                    <div class="status-label">Files Imported</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="components-created">0</div>
+                    <div class="status-label">Components Created</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="design-tokens">0</div>
+                    <div class="status-label">Design Tokens</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="ai-designs">0</div>
+                    <div class="status-label">AI Designs</div>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+
+            <div class="log-output" id="log-output">
+                <div class="log-entry info">[System] Glyph Design System initialized and ready for import...</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>🚀 Transform your scattered designs into a professional, AI-powered design system</p>
+        </div>
+    </div>
+
+    <script>
+        class GlyphDesignSystem {
+            constructor() {
+                this.importedFiles = [];
+                this.components = [];
+                this.designTokens = [];
+                this.aiDesigns = [];
+                this.currentProgress = 0;
+                
+                this.initializeEventListeners();
+                this.updateStatus();
+            }
+
+            initializeEventListeners() {
+                const uploadArea = document.getElementById('upload-area');
+                const fileInput = document.getElementById('file-input');
+
+                // Drag and drop events
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('dragover');
+                });
+
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    this.handleFileDrop(e.dataTransfer.files);
+                });
+
+                // File input change
+                fileInput.addEventListener('change', (e) => {
+                    this.handleFileSelect(e.target.files);
+                });
+            }
+
+            log(message, type = 'info') {
+                const logOutput = document.getElementById('log-output');
+                const timestamp = new Date().toLocaleTimeString();
+                const logEntry = document.createElement('div');
+                logEntry.className = `log-entry ${type}`;
+                logEntry.textContent = `[${timestamp}] ${message}`;
+                
+                logOutput.appendChild(logEntry);
+                logOutput.scrollTop = logOutput.scrollHeight;
+            }
+
+            updateStatus() {
+                document.getElementById('files-imported').textContent = this.importedFiles.length;
+                document.getElementById('components-created').textContent = this.components.length;
+                document.getElementById('design-tokens').textContent = this.designTokens.length;
+                document.getElementById('ai-designs').textContent = this.aiDesigns.length;
+                
+                // Update progress bar
+                const totalSteps = 4;
+                const currentStep = Math.min(
+                    (this.importedFiles.length > 0 ? 1 : 0) +
+                    (this.components.length > 0 ? 1 : 0) +
+                    (this.designTokens.length > 0 ? 1 : 0) +
+                    (this.aiDesigns.length > 0 ? 1 : 0),
+                    totalSteps
+                );
+                const progress = (currentStep / totalSteps) * 100;
+                document.getElementById('progress-fill').style.width = `${progress}%`;
+            }
+
+            handleFileDrop(files) {
+                this.log(`Processing ${files.length} dropped files...`, 'info');
+                this.processFiles(Array.from(files));
+            }
+
+            handleFileSelect(files) {
+                this.log(`Processing ${files.length} selected files...`, 'info');
+                this.processFiles(Array.from(files));
+            }
+
+            processFiles(files) {
+                files.forEach(file => {
+                    this.log(`Analyzing file: ${file.name}`, 'info');
+                    
+                    // Simulate file processing
+                    setTimeout(() => {
+                        this.importedFiles.push({
+                            name: file.name,
+                            size: file.size,
+                            type: file.type,
+                            lastModified: file.lastModified
+                        });
+                        
+                        this.log(`Successfully imported: ${file.name}`, 'success');
+                        this.updateFileList();
+                        this.updateStatus();
+                    }, Math.random() * 1000 + 500);
+                });
+            }
+
+            updateFileList() {
+                const fileList = document.getElementById('file-list');
+                fileList.innerHTML = '';
+                
+                this.importedFiles.forEach(file => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    
+                    const fileSize = (file.size / 1024).toFixed(1);
+                    const fileDate = new Date(file.lastModified).toLocaleDateString();
+                    
+                    fileItem.innerHTML = `
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-meta">${fileSize} KB • ${fileDate}</div>
+                    `;
+                    
+                    fileList.appendChild(fileItem);
+                });
+            }
+
+            startImport() {
+                this.log('Starting import process...', 'info');
+                this.log('Scanning for existing design files...', 'command');
+                
+                // Simulate scanning process
+                setTimeout(() => {
+                    this.log('Found existing design files in project directories', 'success');
+                    this.log('Ready to import and organize designs', 'info');
+                }, 2000);
+            }
+
+            scanExistingFiles() {
+                this.log('Scanning project directories for design files...', 'info');
+                this.log('Searching: Redwith/, OTB/, frontend-backup/, mobile-app-backup/', 'command');
+                
+                // Simulate scanning
+                setTimeout(() => {
+                    this.log('Found design files in multiple directories', 'success');
+                    this.log('Ready to consolidate into unified design system', 'info');
+                }, 1500);
+            }
+
+            generateUILibrary() {
+                if (this.importedFiles.length === 0) {
+                    this.log('No files imported yet. Please import design files first.', 'warning');
+                    return;
+                }
+                
+                this.log('Generating UI Library from imported designs...', 'info');
+                this.log('Analyzing design patterns and components...', 'command');
+                
+                // Simulate library generation
+                setTimeout(() => {
+                    this.components = [
+                        { name: 'Button Primary', type: 'component', status: 'created' },
+                        { name: 'Button Secondary', type: 'component', status: 'created' },
+                        { name: 'Input Field', type: 'component', status: 'created' },
+                        { name: 'Card Layout', type: 'component', status: 'created' }
+                    ];
+                    
+                    this.designTokens = [
+                        { name: 'Primary Color', type: 'color', value: '#667eea' },
+                        { name: 'Secondary Color', type: 'color', value: '#764ba2' },
+                        { name: 'Typography Scale', type: 'typography', value: '1.25rem' },
+                        { name: 'Spacing Unit', type: 'spacing', value: '8px' }
+                    ];
+                    
+                    this.log('UI Library generated successfully!', 'success');
+                    this.log(`Created ${this.components.length} components and ${this.designTokens.length} design tokens`, 'success');
+                    this.updateStatus();
+                }, 3000);
+            }
+
+            previewLibrary() {
+                if (this.components.length === 0) {
+                    this.log('No UI Library generated yet. Generate one first.', 'warning');
+                    return;
+                }
+                
+                this.log('Previewing generated UI Library...', 'info');
+                this.log('Opening Figma preview...', 'command');
+                
+                setTimeout(() => {
+                    this.log('Figma preview opened successfully', 'success');
+                }, 1000);
+            }
+
+            generateAIDesign() {
+                const prompt = document.getElementById('ai-prompt').value.trim();
+                
+                if (!prompt) {
+                    this.log('Please enter a design prompt first.', 'warning');
+                    return;
+                }
+                
+                if (this.importedFiles.length === 0) {
+                    this.log('No reference designs imported. Import some designs first for better AI results.', 'warning');
+                }
+                
+                this.log('Generating AI design from prompt...', 'info');
+                this.log(`Prompt: "${prompt}"`, 'command');
+                
+                // Simulate AI generation
+                setTimeout(() => {
+                    const newDesign = {
+                        name: `AI Generated Design ${this.aiDesigns.length + 1}`,
+                        prompt: prompt,
+                        status: 'generated'
+                    };
+                    
+                    this.aiDesigns.push(newDesign);
+                    this.log('AI design generated successfully!', 'success');
+                    this.log('Design ready for Figma import', 'info');
+                    this.updateStatus();
+                }, 4000);
+            }
+
+            previewPrompt() {
+                const prompt = document.getElementById('ai-prompt').value.trim();
+                
+                if (!prompt) {
+                    this.log('No prompt to preview. Enter a design description first.', 'warning');
+                    return;
+                }
+                
+                this.log('Previewing AI prompt...', 'info');
+                this.log(`Prompt: "${prompt}"`, 'command');
+                this.log('This prompt will generate a design based on your existing design system', 'info');
+            }
+        }
+
+        // Initialize the system
+        const glyphSystem = new GlyphDesignSystem();
+
+        // Global functions for button clicks
+        function startImport() { glyphSystem.startImport(); }
+        function scanExistingFiles() { glyphSystem.scanExistingFiles(); }
+        function generateUILibrary() { glyphSystem.generateUILibrary(); }
+        function previewLibrary() { glyphSystem.previewLibrary(); }
+        function generateAIDesign() { glyphSystem.generateAIDesign(); }
+        function previewPrompt() { glyphSystem.previewPrompt(); }
+        function triggerFileInput() { document.getElementById('file-input').click(); }
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glyph Design System - AI-Powered UI Library Generator</title>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎨 Glyph Design System</h1>
+            <p>AI-Powered UI Library Generator from Your Figma Designs</p>
+            <div class="figma-link">
+                <a href="https://www.figma.com/design/1B6YOHSRMa6hcZ1rWLcMOJ/Propkit-UI--WIP-?node-id=8705-470&t=mw67rwRUJYco4Rkx-1" target="_blank" rel="noopener" class="figma-btn">
+                    🔗 Open Figma Design File
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Workflow -->
+        <div class="workflow-grid">
+            <!-- Phase 1: Scan Figma Designs -->
+            <div class="workflow-card">
+                <h2>🔍 Phase 1: Scan Figma Designs</h2>
+                <p>Connect to your existing Figma design file and extract components, styles, and design patterns to build your design system foundation.</p>
+                <button class="btn success" onclick="scanFigmaDesigns()">Scan Figma Designs</button>
+                <button class="btn secondary" onclick="previewLibrary()">Preview Components</button>
+            </div>
+
+            <!-- Phase 2: Generate UI Library -->
+            <div class="workflow-card">
+                <h2>🏗️ Phase 2: Generate UI Library</h2>
+                <p>Transform your Figma designs into a professional, organized UI library with consistent components, styles, and design tokens.</p>
+                <button class="btn" onclick="generateUILibrary()">Generate UI Library</button>
+                <button class="btn secondary" onclick="previewLibrary()">Preview Library</button>
+            </div>
+        </div>
+
+        <!-- AI Design Generation -->
+        <div class="ai-prompt-section">
+            <h2>🤖 AI Design Generation</h2>
+            <p>Use text prompts to generate new designs based on your existing Figma design system. The AI will use your components and design tokens as reference.</p>
+            <textarea 
+                class="prompt-input" 
+                placeholder="Describe the design you want to create... (e.g., 'Create a modern login form with rounded corners, using our brand colors and following our button style guidelines')&#10;&#10;💡 Tip: Press Ctrl+Enter to generate quickly"
+                id="ai-prompt"
+                rows="4"
+            ></textarea>
+            <button class="btn success" onclick="generateAIDesign()">Generate AI Design</button>
+            <button class="btn secondary" onclick="previewPrompt()">Preview Prompt</button>
+        </div>
+
+        <!-- Status & Progress -->
+        <div class="status-panel">
+            <h2>📊 Status & Progress</h2>
+            
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-value" id="components-created">0</div>
+                    <div class="status-label">Components Found</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="design-tokens">0</div>
+                    <div class="status-label">Design Tokens</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="ai-designs">0</div>
+                    <div class="status-label">AI Designs</div>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+
+            <div class="log-output" id="log-output">
+                <div class="log-entry info">[System] Glyph Design System initialized and ready to scan Figma designs...</div>
+                <div class="log-entry info">[System] Connected to Figma File: Propkit-UI--WIP-</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>🚀 Transform your scattered Figma designs into a professional, AI-powered design system</p>
+        </div>
+    </div>
+</body>
+</html>

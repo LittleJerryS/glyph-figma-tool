@@ -2,40 +2,47 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  mode: 'development',
   entry: {
-    code: './src/code.ts',
-    ui: './src/ui.ts'
+    main: './src/index.ts'
+  },
+  output: {
+    filename: '[name].js',
+    path: path.resolve(__dirname, 'dist'),
+    clean: true
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: /node_modules/,
+        exclude: /node_modules/
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-    ],
-  },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
-  },
-  output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'dist'),
+        use: ['style-loader', 'css-loader']
+      }
+    ]
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/ui.html',
-      filename: 'ui.html',
-      chunks: ['ui']
+      template: './src/index.html',
+      filename: 'index.html'
     })
   ],
-  mode: 'development',
-  externals: {
-    // Figma types are provided by the plugin environment
-    figma: 'figma'
-  }
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'dist'),
+    },
+    compress: true,
+    port: 3001,
+    hot: true,
+    proxy: {
+      '/api': 'http://localhost:3000'
+    }
+  },
+  devtool: 'source-map'
 };

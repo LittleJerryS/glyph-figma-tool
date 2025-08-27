@@ -1,28 +1,38 @@
 {
   "name": "glyph-figma-tool",
   "version": "1.0.0",
-  "description": "Figma plugin for Glyph design system management and frontend prototype generation",
-  "main": "code.js",
+  "description": "AI-Powered UI Library Generator & Design System Builder",
+  "main": "server.js",
   "scripts": {
-    "build": "webpack --mode=production",
-    "dev": "webpack --mode=development --watch",
-    "type-check": "tsc --noEmit"
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development --watch",
+    "start": "node server.js",
+    "dev:server": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["figma", "plugin", "design-system", "glyph", "frontend"],
-  "author": "Redwith Team",
+  "keywords": ["figma", "design-system", "ui-library", "ai", "design"],
+  "author": "Glyph Design Team",
   "license": "MIT",
-  "devDependencies": {
-    "@figma/plugin-typings": "^1.82.0",
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "webpack": "^5.88.0",
-    "webpack-cli": "^5.1.0",
-    "ts-loader": "^9.4.0",
-    "html-webpack-plugin": "^5.5.0",
-    "css-loader": "^6.8.0",
-    "style-loader": "^3.3.0"
-  },
   "dependencies": {
-    "openai": "^4.0.0"
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "cors": "^2.8.5",
+    "sharp": "^0.32.6",
+    "fs-extra": "^11.1.1",
+    "path": "^0.12.7",
+    "openai": "^4.20.1",
+    "dotenv": "^16.3.1",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "typescript": "^5.2.2",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "ts-loader": "^9.4.4",
+    "html-webpack-plugin": "^5.5.3",
+    "css-loader": "^6.8.1",
+    "style-loader": "^3.3.3",
+    "nodemon": "^3.0.1"
   }
 }
