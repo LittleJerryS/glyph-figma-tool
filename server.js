@@ -17,10 +17,20 @@ app.use(express.json());
 app.use(express.static('dist'));
 app.use('/uploads', express.static('uploads'));
 
-// Initialize OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'your-api-key-here'
-});
+// Initialize OpenAI with better error handling
+let openai = null;
+try {
+  if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your-api-key-here') {
+    openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
+    });
+    console.log('✅ OpenAI API initialized successfully');
+  } else {
+    console.log('⚠️  OpenAI API key not configured - AI features will be disabled');
+  }
+} catch (error) {
+  console.error('❌ Failed to initialize OpenAI:', error.message);
+}
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
