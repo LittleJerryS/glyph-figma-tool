@@ -207,15 +207,15 @@ class GlyphDesignSystem {
   }
 
   // Public methods for button clicks
-  public scanFigmaDesigns() {
+  public handleScanFigmaDesigns() {
     this.scanFigmaDesigns();
   }
 
-  public generateUILibrary() {
+  public handleGenerateUILibrary() {
     this.generateUILibrary();
   }
 
-  public previewLibrary() {
+  public handlePreviewLibrary() {
     if (this.components.length === 0) {
       this.log('No UI Library generated yet. Scan Figma designs first.', 'warning');
       return;
@@ -231,11 +231,11 @@ class GlyphDesignSystem {
     });
   }
 
-  public generateAIDesign() {
+  public handleGenerateAIDesign() {
     this.generateAIDesign();
   }
 
-  public previewPrompt() {
+  public handlePreviewPrompt() {
     const promptInput = document.getElementById('ai-prompt') as HTMLTextAreaElement;
     const prompt = promptInput?.value.trim();
     
@@ -259,9 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const glyphSystem = new GlyphDesignSystem();
   
   // Make methods globally available for button clicks
-  (window as any).scanFigmaDesigns = () => glyphSystem.scanFigmaDesigns();
-  (window as any).generateUILibrary = () => glyphSystem.generateUILibrary();
-  (window as any).previewLibrary = () => glyphSystem.previewLibrary();
-  (window as any).generateAIDesign = () => glyphSystem.generateAIDesign();
-  (window as any).previewPrompt = () => glyphSystem.previewPrompt();
+  (window as any).scanFigmaDesigns = () => glyphSystem.handleScanFigmaDesigns();
+  (window as any).generateUILibrary = () => glyphSystem.handleGenerateUILibrary();
+  (window as any).previewLibrary = () => glyphSystem.handlePreviewLibrary();
+  (window as any).generateAIDesign = () => glyphSystem.handleGenerateAIDesign();
+  (window as any).previewPrompt = () => glyphSystem.handlePreviewPrompt();
 });
